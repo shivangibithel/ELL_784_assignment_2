@@ -84,7 +84,7 @@ class Eigenfaces(object):                                                       
 
         self.evalues, self.evectors = np.linalg.eig(C)                          # eigenvectors/values of the covariance matrix
         sort_indices = self.evalues.argsort()[::-1]                             # getting their correct order - decreasing
-        self.evalues = self.evalues[sort_indices]                               # puttin the evalues in that order
+        self.evalues = self.evalues[sort_indices]                               # putting the evalues in that order
         self.evectors = self.evectors[:,sort_indices]                             # same for the evectors
 
         evalues_sum = sum(self.evalues[:])                                      # include only the first k evectors/values so
@@ -121,6 +121,10 @@ class Eigenfaces(object):                                                       
         S = self.evectors.transpose() * img_col                                 # projecting the normalized probe onto the
                                                                                 # Eigenspace, to find out the weights
 
+        # Projecting all training samples into the PCA subspace.
+        # Projecting the query image into the PCA subspace.
+        # Finding the nearest neighbor between the projected training images and the projected query image.
+
         diff = self.W - S                                                       # finding the min ||W_j - S||
         norms = np.linalg.norm(diff, axis=0)
 
@@ -154,13 +158,13 @@ class Eigenfaces(object):                                                       
                     if not result:
                         fig = plt.figure(figsize=(10, 7))
                         fig.add_subplot(1, 2, 1)
-                        X = plt.imread(path_predicted_img)
-                        plt.imshow(X)
-                        plt.title('Predicted')
-                        fig.add_subplot(1, 2, 2)
                         Tru_img = plt.imread(path_to_img)
                         plt.imshow(Tru_img)
-                        plt.title('test img')
+                        plt.title('Test Image')
+                        fig.add_subplot(1, 2, 2)
+                        X = plt.imread(path_predicted_img)
+                        plt.imshow(X)
+                        plt.title('Incorrect Prediction')
                         plt.show()
 
                     if result == True:
@@ -182,7 +186,7 @@ class Eigenfaces(object):                                                       
 
 if __name__ == "__main__":
     if len(sys.argv) < 2 :
-        print ('Usage: python2.7 eigenfaces.py ' \
+        print ('Usage: python<version> eigenfaces.py ' \
             + '<att faces dir>')
         sys.exit(1)
 
