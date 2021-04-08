@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-__author__ = 'Aleksandar Gyorev'
-__email__  = 'a.gyorev@jacobs-university.de'
+__author__ = 'Shivangi Bithel, Yukti Kaura, Vishnu'
 
 import os
 import cv2
@@ -12,6 +11,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 """
+https://youtu.be/UciYzmaINiQ
+https://youtu.be/SaEmG4wcFfg
 A Python class that implements the Eigenfaces algorithm
 for face recognition, using eigenvalue decomposition and
 principle component analysis.
@@ -33,14 +34,17 @@ class Eigenfaces(object):                                                       
 
     faces_dir = '.'                                                             # directory path to the AT&T faces
 
-    train_faces_count = 6                                                       # number of faces used for training
-    test_faces_count = 4                                                        # number of faces used for testing
+    train_faces_count = 8                                                       # number of faces used for training
+    test_faces_count = 2                                                        # number of faces used for testing
 
     l = train_faces_count * faces_count                                         # training images count
     m = 92                                                                      # number of columns of the image
     n = 112                                                                     # number of rows of the image
     mn = m * n                                                                  # length of the column vector
 
+
+    # N= 92*112 rows
+    # M= 40*10 columns
     """
     Initializing the Eigenfaces model.
     """
@@ -80,6 +84,7 @@ class Eigenfaces(object):                                                       
                                                                                 # smaller and computentionally inexpensive one
                                                                                 # we also need to divide by the number of training
                                                                                 # images
+                                                                                # Dimensionality reduction
 
 
         self.evalues, self.evectors = np.linalg.eig(C)                          # eigenvectors/values of the covariance matrix
@@ -100,12 +105,12 @@ class Eigenfaces(object):                                                       
         self.evalues = self.evalues[0:evalues_count]                            # reduce the number of eigenvectors/values to consider
         self.evectors = self.evectors[:,0:evalues_count]
 
-        #self.evectors = self.evectors.transpose()                                # change eigenvectors from rows to columns (Should not transpose) 
-        self.evectors = L * self.evectors                                       # left multiply to get the correct evectors
+
+        self.evectors = L * self.evectors                                       # left multiply to get the correct evectors(Increase Dimensionality)
         norms = np.linalg.norm(self.evectors, axis=0)                           # find the norm of each eigenvector
         self.evectors = self.evectors / norms                                   # normalize all eigenvectors
 
-        self.W = self.evectors.transpose() * L                                  # computing the weights
+        self.W = self.evectors.transpose() * L                                  # computing the weights (Weight Matrix of individual image or weight vectors per image)
 
         print('> Initializing ended')
 
@@ -115,7 +120,7 @@ class Eigenfaces(object):                                                       
     def classify(self, path_to_img):
         img = cv2.imread(path_to_img, 0)                                        # read as a grayscale image
         img_col = np.array(img, dtype='float64').flatten()                      # flatten the image
-        img_col -= self.mean_img_col                                            # subract the mean column
+        img_col -= self.mean_img_col                                            # subract the mean column /normalize
         img_col = np.reshape(img_col, (self.mn, 1))                             # from row vector to col vector
 
         S = self.evectors.transpose() * img_col                                 # projecting the normalized probe onto the
@@ -129,7 +134,7 @@ class Eigenfaces(object):                                                       
         norms = np.linalg.norm(diff, axis=0)
 
         closest_face_id = np.argmin(norms)                                      # the id [0..240) of the minerror face to the sample
-        return int(closest_face_id / self.train_faces_count) + 1                   # return the faceid (1..40)
+        return int(closest_face_id / self.train_faces_count) + 1                   # return the faceid (1..40) # Cluster ID
 
     """
     Evaluate the model using the 4 test faces left
@@ -148,24 +153,33 @@ class Eigenfaces(object):                                                       
                     path_to_img = os.path.join(self.faces_dir,
                             's' + str(face_id), str(test_id) + '.pgm')          # relative path
 
-
+                    fig = plt.figure(figsize=(10, 7))
+                    # fig.add_subplot(1, 2, 1)
+                    Tru_img = plt.imread(path_to_img)
+                    plt.imshow(Tru_img)
+                    plt.title('Test Image')
+                    # fig.add_subplot(1, 2, 2)
+                    # X = plt.imread(path_predicted_img)
+                    # plt.imshow(X)
+                    # plt.title('Incorrect Prediction')
+                    plt.show()
 
                     result_id = self.classify(path_to_img)
                     path_predicted_img = os.path.join(self.faces_dir,
                                                       's' + str(result_id), str(test_id) + '.pgm')
                     result = (result_id == face_id)
 
-                    if not result:
-                        fig = plt.figure(figsize=(10, 7))
-                        fig.add_subplot(1, 2, 1)
-                        Tru_img = plt.imread(path_to_img)
-                        plt.imshow(Tru_img)
-                        plt.title('Test Image')
-                        fig.add_subplot(1, 2, 2)
-                        X = plt.imread(path_predicted_img)
-                        plt.imshow(X)
-                        plt.title('Incorrect Prediction')
-                        plt.show()
+                    # if not result:
+                    #     fig = plt.figure(figsize=(10, 7))
+                    #     fig.add_subplot(1, 2, 1)
+                    #     Tru_img = plt.imread(path_to_img)
+                    #     plt.imshow(Tru_img)
+                    #     plt.title('Test Image')
+                    #     fig.add_subplot(1, 2, 2)
+                    #     X = plt.imread(path_predicted_img)
+                    #     plt.imshow(X)
+                    #     plt.title('Incorrect Prediction')
+                    #     plt.show()
 
                     if result == True:
                         test_correct += 1
