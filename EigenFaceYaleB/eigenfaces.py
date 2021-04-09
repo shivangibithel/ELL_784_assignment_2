@@ -26,7 +26,8 @@ for j in range(train_num):
 # calculating covariance matrix of trainin images############
 cov = np.matmul(images,images.T)/train_num
 print(cov.shape)
-###this part is not required as we are calculating the svd####################################
+###############################################################################################
+###this part is not required as we are calculating the svd ####################################
 # calculating eigen values and vectors of covariance matrix#################                 #
 eigvals,eigvecs = np.linalg.eigh(cov)                                                        #
 norm = np.linalg.norm(eigvecs, axis=0)                                                       #
@@ -40,6 +41,7 @@ A = eigvecs[:, 0:k]                                                             
 #
 Y = np.matmul(A.T,images)
 #################################################################################################
+
 ## SVD of covariance matrix #####################3
 u,s,v = np.linalg.svd(cov)
 print(u.shape, s.shape , v.shape)
@@ -67,7 +69,7 @@ for col in range(u.shape[1]):
 
 dot_test = np.array(test_x, dtype='int8').flatten()
 
-# Dot product of all the training images and U matrix(projection of training images onto U matraix)#######################333
+# Dot product of all the training images and U matrix(projection of training images onto U )#######################
 dot_train = np.empty(shape=(u.shape[0] * u.shape[1], u.shape[1]), dtype='int8')
 temp = np.empty(shape=(u.shape[0], u.shape[1]), dtype=np.int8)
 
@@ -128,7 +130,7 @@ for filename in files:
         i = i + 1
         
         
-## plotting the test image and corresponding predicted image from thetraining set######################3   
+## plotting the test image and corresponding predicted image from the training set######################3   
 fig = plt.figure(figsize=(10,7))
 fig.add_subplot(1,2,1)
 X = plt.imread(path+filename)
