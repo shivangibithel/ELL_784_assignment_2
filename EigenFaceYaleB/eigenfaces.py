@@ -53,6 +53,8 @@ img = test.reshape(400,1)
 img = img - mean
 img = img.T
 
+#calculating & comparing the euclidian distance of all projected trained images from the projected test image###############
+
 # Dot product of test image and U matrix
 test_x = np.empty(shape=(u.shape[0], u.shape[1]), dtype=np.int8)
 print(test_x.shape)
