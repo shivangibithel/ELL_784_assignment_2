@@ -34,8 +34,8 @@ class Eigenfaces(object):                                                       
 
     faces_dir = '.'                                                             # directory path to the AT&T faces
 
-    train_faces_count = 8                                                       # number of faces used for training
-    test_faces_count = 2                                                        # number of faces used for testing
+    train_faces_count = 6                                                       # number of faces used for training
+    test_faces_count = 4                                                        # number of faces used for testing
 
     l = train_faces_count * faces_count                                         # training images count
     m = 92                                                                      # number of columns of the image
@@ -48,7 +48,7 @@ class Eigenfaces(object):                                                       
     """
     Initializing the Eigenfaces model.
     """
-    def __init__(self, _faces_dir = '.', _energy = 0.85):
+    def __init__(self, _faces_dir = '.', _energy = 0.45):
         print('> Initializing started')
 
         self.faces_dir = _faces_dir
@@ -60,7 +60,7 @@ class Eigenfaces(object):                                                       
         cur_img = 0
         for face_id in range(1, self.faces_count + 1):
 
-            training_ids = random.sample(range(1, 11), self.train_faces_count)  # the id's of the 6 random training images
+            training_ids = [1,2,3,4,5,6]#random.sample(range(1, 11), self.train_faces_count)  # the id's of the 6 random training images
             self.training_ids.append(training_ids)                              # remembering the training id's for later
 
             for training_id in training_ids:
@@ -101,18 +101,18 @@ class Eigenfaces(object):                                                       
 
             if evalues_energy >= self.energy:
                 break
-
+        print('Principal Components' , evalues_count)
         self.evalues = self.evalues[0:evalues_count]                            # reduce the number of eigenvectors/values to consider
         self.evectors = self.evectors[:,0:evalues_count]
-
-
-        self.evectors = L * self.evectors                                       # left multiply to get the correct evectors(Increase Dimensionality)
+        self.evectors = L * self.evectors
+                                                                             # left multiply to get the correct evectors(Increase Dimensionality)
         norms = np.linalg.norm(self.evectors, axis=0)                           # find the norm of each eigenvector
         self.evectors = self.evectors / norms                                   # normalize all eigenvectors
-
         self.W = self.evectors.transpose() * L                                  # computing the weights (Weight Matrix of individual image or weight vectors per image)
-
         print('> Initializing ended')
+
+
+
 
     """
     Classify an image to one of the eigenfaces.
@@ -130,7 +130,9 @@ class Eigenfaces(object):                                                       
         # Projecting the query image into the PCA subspace.
         # Finding the nearest neighbor between the projected training images and the projected query image.
 
-        diff = self.W - S                                                       # finding the min ||W_j - S||
+        diff = self.W - S
+        # finding the min ||W_j - S||
+        # diff = self.G - S
         norms = np.linalg.norm(diff, axis=0)
 
         closest_face_id = np.argmin(norms)                                      # the id [0..240) of the minerror face to the sample
@@ -153,11 +155,11 @@ class Eigenfaces(object):                                                       
                     path_to_img = os.path.join(self.faces_dir,
                             's' + str(face_id), str(test_id) + '.pgm')          # relative path
 
-                    fig = plt.figure(figsize=(10, 7))
+                    # fig = plt.figure(figsize=(10, 7))
                     # fig.add_subplot(1, 2, 1)
-                    Tru_img = plt.imread(path_to_img)
-                    plt.imshow(Tru_img)
-                    plt.title('Test Image')
+                    # Tru_img = plt.imread(path_to_img)
+                    # plt.imshow(Tru_img)
+                    # plt.title('Test Image')
                     # fig.add_subplot(1, 2, 2)
                     # X = plt.imread(path_predicted_img)
                     # plt.imshow(X)
