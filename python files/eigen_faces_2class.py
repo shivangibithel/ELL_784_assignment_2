@@ -1,13 +1,7 @@
-# -*- coding: utf-8 -*-
-
 # Import libraries
-import matplotlib
-from matplotlib import pyplot as plt
 from matplotlib.image import imread
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
-import cv2 as cv
 import os
 
 num_images = 0
