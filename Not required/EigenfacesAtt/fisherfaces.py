@@ -18,7 +18,7 @@ testimgs = 10 - trainimgs
 #     testimgs = 11 - trainimgs
 
 rows, cols = img.shape
-faces = len(os.listdir('./'+ dataset))
+faces = 10 #len(os.listdir('./'+ dataset))
 n = trainimgs * faces  # total train images(N)
 d = rows * cols        # pixelcount
 #///////////////////////////////////#
@@ -46,7 +46,7 @@ egvals, egvecs = np.linalg.eig(covar)           # n,n
 egvecs = np.matrix(X1) * np.matrix(egvecs)       # d,n
 norm = np.linalg.norm(egvecs, axis=0)
 egvecs = egvecs / norm
-m1 = n - faces
+m1 = 10#n - faces
 p = egvals.argsort()[::-1]
 egvals = egvals[p]
 egvecs = egvecs[:, p]

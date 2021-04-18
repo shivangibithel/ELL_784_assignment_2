@@ -30,7 +30,7 @@ Algorithm Reference:
     http://docs.opencv.org/modules/contrib/doc/facerec/facerec_tutorial.html
 """
 class Eigenfaces(object):                                                       # *** COMMENTS ***
-    faces_count = 40
+    faces_count = 10
 
     faces_dir = '.'                                                             # directory path to the AT&T faces
 
@@ -48,7 +48,7 @@ class Eigenfaces(object):                                                       
     """
     Initializing the Eigenfaces model.
     """
-    def __init__(self, _faces_dir = '.', _energy = 0.45):
+    def __init__(self, _faces_dir = '.', _energy = 0.60):
         print('> Initializing started')
 
         self.faces_dir = _faces_dir
@@ -108,7 +108,7 @@ class Eigenfaces(object):                                                       
                                                                              # left multiply to get the correct evectors(Increase Dimensionality)
         norms = np.linalg.norm(self.evectors, axis=0)                           # find the norm of each eigenvector
         self.evectors = self.evectors / norms                                   # normalize all eigenvectors
-        self.W = self.evectors.transpose() * L                                  # computing the weights (Weight Matrix of individual image or weight vectors per image)
+        self.W = self.evectors.transpose() * L                                  # computing the weights (Weight Matrix of individual image or weight_matrix vectors per image)
         print('> Initializing ended')
 
 
