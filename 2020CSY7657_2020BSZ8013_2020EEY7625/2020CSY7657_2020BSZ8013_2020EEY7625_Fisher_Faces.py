@@ -16,11 +16,11 @@ def init():
     number_of_training_img = 6
     number_of_testing_img = 4
     total_training_img = number_of_training_img * number_of_classes
-    total_testing_img = number_of_testing_img * number_of_classes
+    total_testing_img = number_of_testing_img * number_of_classes +4
 
     """ Face dataset"""
     # to store all the training images in an array
-    pattern_matrix_training = np.ndarray(shape=(number_of_classes * number_of_training_img, height * width), dtype=np.float64)
+    pattern_matrix_training = np.ndarray(shape=(total_training_img, height * width), dtype=np.float64)
     for i in range(number_of_classes):
         for j in range(number_of_training_img):
             img = plt.imread(dataset_path + 'training1/s' + str(i + 1) + '/' + str(j + 1) + '.pgm')
@@ -28,8 +28,8 @@ def init():
             pattern_matrix_training[number_of_training_img * i + j, :] = np.array(img, dtype='float64').flatten()
 
     # to store all the testing images in an array
-    pattern_matrix_testing = np.ndarray(shape=(44, height * width), dtype=np.float64)
-    for i in range(44):
+    pattern_matrix_testing = np.ndarray(shape=(total_testing_img, height * width), dtype=np.float64)
+    for i in range(total_testing_img):
         img = imread(dataset_path + 'test/' + str(i + 1) + '.pgm')
         pattern_matrix_testing[i, :] = np.array(img, dtype='float64').flatten()
 

@@ -11,7 +11,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 import os
 
 if __name__ == '__main__':
-    dataset_path = '../dataset/'
+    dataset_path = './dataset/'
     dataset_dir = os.listdir(dataset_path)
     width = 92
     height = 112
@@ -50,22 +50,6 @@ if __name__ == '__main__':
     plt.title('Determine data boundary')
     plt.show()
 
-    """ Decision boundary LDA """
-
-    lda = LinearDiscriminantAnalysis()
-    lda_object = lda.fit_transform(pattern_matrix_training, y)
-    plt.figure()
-    colors = ['navy', 'turquoise']
-    target_names = ['subject0', 'subject1']
-    for color, i, target_name in zip(colors, [0, 1, 2], target_names):
-        plt.scatter(lda_object[y == i, 0], lda_object[y == i, 0], alpha=.8, color=color,
-                    label=target_name)
-    plt.xlabel('LD1')
-    plt.ylabel('LD2')
-    plt.legend(loc='best', shadow=False, scatterpoints=1)
-    plt.title('LDA of ATT dataset')
-    plt.show()
-
     """ K-means """
     data = pattern_matrix_training
     pca = PCA(2)
@@ -100,6 +84,21 @@ if __name__ == '__main__':
         plt.scatter(df[label == i, 0], df[label == i, 1], label=i)
     plt.scatter(centroids[:, 0], centroids[:, 1], s=80, color='k')
     plt.legend()
+    plt.show()
+
+    """ Decision boundary LDA """
+    training_tensor = np.array(pattern_matrix_training)
+    lda = LinearDiscriminantAnalysis()
+    # lda = LinearDiscriminantAnalysis(n_components=1)
+    X_lda = lda.fit_transform(pattern_matrix_training, y)
+    plt.figure()
+    colors = ['navy', 'turquoise']
+    target_names = ['subject0', 'subject1']
+    for color, i, target_name in zip(colors, [0, 1], target_names):
+        plt.scatter(X_lda[:,0],y,color=color, alpha=.8)
+    plt.xlabel('LD1')
+    plt.ylabel('LD2')
+    plt.title('LDA of AT&T dataset')
     plt.show()
 
     """ Plotting of Accuracy vs k-value for eigenvectors """

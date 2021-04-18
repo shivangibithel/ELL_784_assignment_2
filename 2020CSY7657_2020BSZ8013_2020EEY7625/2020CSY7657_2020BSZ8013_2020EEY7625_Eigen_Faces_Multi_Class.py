@@ -17,19 +17,32 @@ def recogniser(img_number, proj_data, w):
     norms = np.linalg.norm(diff, axis=1)
     index = np.argmin(norms)
     set_number = int(img_number/4)
-    if(index>=(6*set_number) and index<(6*(set_number+1))):
-        correct_pred += 1
+    t0 = 15000000
+    if norms[index] < t0:
+        if (index >= (6 * set_number) and index < (6 * (set_number + 1))):
+            plt.title('Matched with:' + str(index + 1), color='g')
+            plt.imshow(pattern_matrix_training[index, :].reshape(height, width), cmap='gray')
+            correct_pred += 1
+        else:
+            plt.title('Matched with:' + str(index + 1), color='r')
+            plt.imshow(pattern_matrix_training[index, :].reshape(height, width), cmap='gray')
+    else:
+        if (img_number >= 40):
+            plt.title('Unknown face!', color='g')
+            correct_pred += 1
+        else:
+            plt.title('Unknown face!', color='r')
 
 if __name__ == '__main__':
-    dataset_path = '../dataset/'
+    dataset_path = './dataset/'
     dataset_dir = os.listdir(dataset_path)
     width = 92
     height = 112
-    Number_of_classes = 2
+    Number_of_classes = 10
     Number_of_training_img = 6
     Number_of_testing_img = 4
     total_training_img = Number_of_training_img * Number_of_classes
-    total_testing_img = Number_of_testing_img * Number_of_classes
+    total_testing_img = Number_of_testing_img * Number_of_classes + 4
 
     """ Face dataset"""
     # to store all the training images in an array
@@ -74,7 +87,7 @@ if __name__ == '__main__':
     num_comp = range(1, len(eigvalues_sort)+1)
 
     # Choosing the necessary number of principle components
-    number_chosen_components = 2
+    number_chosen_components = 30
     print("k:", number_chosen_components)
     reduced_data = np.array(eigvectors_sort[:number_chosen_components]).transpose()
 

@@ -21,7 +21,7 @@ def recogniser(img_number, proj_data, w):
         correct_pred += 1
 
 if __name__ == '__main__':
-    dataset_path = '../dataset/'
+    dataset_path = './dataset/'
     dataset_dir = os.listdir(dataset_path)
     width = 92
     height = 112
