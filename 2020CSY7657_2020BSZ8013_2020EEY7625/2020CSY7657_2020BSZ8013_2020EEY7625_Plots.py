@@ -95,7 +95,7 @@ if __name__ == '__main__':
     colors = ['navy', 'turquoise']
     target_names = ['subject0', 'subject1']
     for color, i, target_name in zip(colors, [0, 1], target_names):
-        plt.scatter(X_lda[:,0],y,color=color, alpha=.8)
+        plt.scatter(X_lda[y == i, 0], y[y==i], alpha = .8, color = color)
     plt.xlabel('LD1')
     plt.ylabel('LD2')
     plt.title('LDA of AT&T dataset')
